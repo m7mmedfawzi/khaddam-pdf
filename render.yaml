@@ -1,9 +1,10 @@
 services:
   - type: web
     name: khaddam-pdf
-    runtime: python
-    buildCommand: ""
-    startCommand: "python app.py"
-    envVars:
-      - key: FLASK_ENV
-        value: production
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    preDeployCommand: apt-get update && apt-get install -y libreoffice
+    region: oregon
+    plan: free
+
