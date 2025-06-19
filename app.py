@@ -19,8 +19,20 @@ def convert_pdf_to_word():
 
     pdf.save(pdf_path)
 
-    cv = Converter(pdf_path)
-    cv.convert(docx_path)
-    cv.close()
+    try:
+        cv = Converter(pdf_path)
+        cv.convert(docx_path)
+        cv.close()
+        return send_file(docx_path, as_attachment=True, download_name='converted.docx')
+    except Exception as e:
+        return f'حصل خطأ: {str(e)}', 500
+    finally:
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
+        if os.path.exists(docx_path):
+            os.remove(docx_path)
 
-    return send_file(docx_path, as_attachment=True, download_name='converted.docx')
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
